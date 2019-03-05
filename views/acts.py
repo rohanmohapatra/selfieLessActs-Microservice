@@ -46,7 +46,7 @@ def removeAct(actID):
 @acts.route('',methods=['POST'])
 def uploadAct():
 
-	hostForGettingUsernames = "localhost"
+	hostForGettingUsernames = "3.94.30.50"
 	if (request.method == 'POST'):
 	    json_data = request.get_json()
 	    #print(json_data)
