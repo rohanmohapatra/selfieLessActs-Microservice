@@ -13,7 +13,8 @@ RUN apk add --no-cache python3 && \
     if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
     rm -r /root/.cache && \
     apk add --no-cache git && \
-    python3 db_creator.py
+    apk add --no-cache bash && \
+    python3 db_creator.py 
 
 EXPOSE 80
 

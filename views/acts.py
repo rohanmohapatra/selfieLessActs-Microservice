@@ -33,10 +33,11 @@ def upvote():
 def removeAct(actID):
     if (request.method == 'DELETE'):
         	pick_act= Acts.query.filter_by(actId=actID).first()
-        	text=pick_act.categoryName
+        	#text=pick_act.categoryName
         	if(not pick_act):
         		abort(400)
-        	category = Categories.query.filter_by(categoryName=text).first()
+        	text = pick_act.categoryName
+                category = Categories.query.filter_by(categoryName=text).first()
         	category.numberOfActs -=1
         	db.session.delete(pick_act)
         	db.session.commit()
