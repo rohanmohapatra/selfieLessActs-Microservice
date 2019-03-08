@@ -37,7 +37,7 @@ def removeAct(actID):
         	if(not pick_act):
         		abort(400)
         	text = pick_act.categoryName
-                category = Categories.query.filter_by(categoryName=text).first()
+        	category = Categories.query.filter_by(categoryName=text).first()
         	category.numberOfActs -=1
         	db.session.delete(pick_act)
         	db.session.commit()
