@@ -54,10 +54,12 @@ def uploadAct():
 	    #print(json_data)
 	    if (json_data):
 	    	print("JSON is Valid")
-		try:
-	    		userNames = requests.get("http://{}:8080/api/v1/users".format(hostForGettingUsernames)).json()
-		except:
-			abort(400)
+	    	userNames = requests.get("http://{}:8080/api/v1/users".format(hostForGettingUsernames))
+	    	try:
+	    		userNames = userNames.json()
+	    	except Exception as e:
+	    		abort(400)
+
 	    	if(len(userNames)>0):
 	    		user_name = json_data['username']
 	    		if(user_name):
