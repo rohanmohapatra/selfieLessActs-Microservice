@@ -6,8 +6,28 @@ import requests
 from models import Categories,Acts
 from app import db
 from validate.validateInput import validateAndFormatTimeFormat,validateImageFormat
+import sys
+sys.path.insert(0, 'datatypes')
+sys.path.insert(1,'dataaccess')
+import categoriesList
+import categoriesFromDB
+import actsFromDB
 
 acts = Blueprint('acts',__name__,url_prefix='/acts')
+
+@acts.route('/count',methods=['GET'])
+def countActs():
+	if(request.method == 'GET'):
+		categoriesListResponse = categoriesList.categoriesListResponse()
+		#categoriesListResponse.intializeDummy()
+		categoriesListResponse.fetchCategories()
+		result = categoriesListResponse.getCategoryResponseDict()
+		resultSum = sum(result.values())
+		resultSum = [resultSum]
+		response = jsonify(resultSum)
+		print(response)
+		return response
+
 
 @acts.route('/upvote',methods=['POST'])
 def upvote():
