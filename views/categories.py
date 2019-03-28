@@ -8,12 +8,14 @@ sys.path.insert(1,'dataaccess')
 import categoriesList
 import categoriesFromDB
 import actsFromDB
+from views._count import requestCounter
 
 categories = Blueprint('categories',__name__)
 
 @categories.route('',methods=['GET','POST'])
 @cross_origin(headers=['Content-type','Accept'])
 def addOrList():
+	requestCounter[0] +=1
 	#If GET, list
 	#If POST, add
 
@@ -53,6 +55,7 @@ def addOrList():
 @categories.route('/<categoryName>',methods=['DELETE'])
 @cross_origin(headers=['Content-type','Accept'])
 def deleteCategory(categoryName):
+	requestCounter[0] +=1
 	#IF DELETE, remove the category
 	if(request.method == 'GET'):
 		return Response(status=405)
@@ -69,6 +72,7 @@ def deleteCategory(categoryName):
 @categories.route('/<categoryName>/acts',methods=['GET'])
 @cross_origin(headers=['Content-type','Accept'])
 def listActs(categoryName):
+	requestCounter[0] +=1
 	#If num acts<100, return all the acts in this category
 	#else, error
 	if(request.method == 'GET'):
@@ -120,6 +124,7 @@ def listActs(categoryName):
 @categories.route('/<categoryName>/acts/size',methods=['GET'])
 @cross_origin(headers=['Content-type','Accept'])
 def getActSize(categoryName):
+	requestCounter[0] +=1
 	'''
 	return number of acts in the category
 	'''
