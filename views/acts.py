@@ -86,7 +86,10 @@ def uploadAct():
 	    #print(json_data)
 	    if (json_data):
 	    	print("JSON is Valid")
-	    	userNames = requests.get("http://{}:{}/api/v1/users".format(hostForGettingUsernames,args.usersport))
+	    	custom_header = {'origin': '3.93.152.110'}
+	    	userNames = requests.get("http://{}:{}/api/v1/users".format(hostForGettingUsernames,args.usersport),headers=custom_header)
+	    	#print(userNames.headers['origin'])
+	    	print(userNames.text)
 	    	try:
 	    		userNames = userNames.json()
 	    	except Exception as e:

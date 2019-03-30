@@ -20,5 +20,5 @@ EXPOSE 80
 
 ENV TEAM_ID CC_265_307_309_330
 
-CMD ["python3","__init__.py"]
+CMD ["python3","__init__.py","--usershost","selfieless-acts-1391231756.us-east-1.elb.amazonaws.com","--usersport","80"]
 
