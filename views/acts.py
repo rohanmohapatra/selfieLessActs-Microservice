@@ -6,12 +6,43 @@ import requests
 from models import Categories,Acts
 from app import db
 from validate.validateInput import validateAndFormatTimeFormat,validateImageFormat
+import sys
+sys.path.insert(0, 'datatypes')
+sys.path.insert(1,'dataaccess')
+import categoriesList
+import categoriesFromDB
+import actsFromDB
+from views._count import requestCounter
+#from __init__ import args
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--usershost")
+parser.add_argument("--usersport")
+args = parser.parse_args()
 
 acts = Blueprint('acts',__name__,url_prefix='/acts')
 
+@acts.route('/count',methods=['GET'])
+def countActs():
+	requestCounter[0] +=1
+	if(request.method == 'GET'):
+		#requestCounter[0] +=1
+		categoriesListResponse = categoriesList.categoriesListResponse()
+		#categoriesListResponse.intializeDummy()
+		categoriesListResponse.fetchCategories()
+		result = categoriesListResponse.getCategoryResponseDict()
+		resultSum = sum(result.values())
+		resultSum = [resultSum]
+		response = jsonify(resultSum)
+		print(response)
+		return response
+
+
 @acts.route('/upvote',methods=['POST'])
 def upvote():
+	requestCounter[0] +=1
 	if(request.method == 'POST'):
+		#requestCounter[0] +=1
 		json_data= request.get_json(force=True)
 		if not json_data:
 			print("Bad Request")
@@ -32,29 +63,33 @@ def upvote():
 
 @acts.route('/<actID>',methods=['DELETE'])
 def removeAct(actID):
-    if (request.method == 'DELETE'):
-        	pick_act= Acts.query.filter_by(actId=actID).first()
-        	#text=pick_act.categoryName
-        	if(not pick_act):
-        		abort(400)
-        	text = pick_act.categoryName
-        	category = Categories.query.filter_by(categoryName=text).first()
-        	category.numberOfActs -=1
-        	db.session.delete(pick_act)
-        	db.session.commit()
-        	return Response(status=200)
+	requestCounter[0] +=1
+	if (request.method == 'DELETE'):
+		pick_act= Acts.query.filter_by(actId=actID).first()
+    	#text=pick_act.categoryName
+		if(not pick_act):
+			abort(400)
+		text = pick_act.categoryName
+		category = Categories.query.filter_by(categoryName=text).first()
+		category.numberOfActs -=1
+		db.session.delete(pick_act)
+		db.session.commit()
+		return Response(status=200)
 
 
 @acts.route('',methods=['POST'])
 def uploadAct():
-
-	hostForGettingUsernames = "3.94.30.50"
+	requestCounter[0] +=1
+	hostForGettingUsernames = args.usershost
 	if (request.method == 'POST'):
 	    json_data = request.get_json()
 	    #print(json_data)
 	    if (json_data):
 	    	print("JSON is Valid")
-	    	userNames = requests.get("http://{}:8080/api/v1/users".format(hostForGettingUsernames))
+	    	custom_header = {'origin': '3.93.152.110'}
+	    	userNames = requests.get("http://{}:{}/api/v1/users".format(hostForGettingUsernames,args.usersport),headers=custom_header)
+	    	#print(userNames.headers['origin'])
+	    	print(userNames.text)
 	    	try:
 	    		userNames = userNames.json()
 	    	except Exception as e:
